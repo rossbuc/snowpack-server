@@ -11,11 +11,11 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "location_xCoordinate")
-    private long xCoordinate;
+    private double xCoordinate;
     @Column(name = "location_yCoordinate")
-    private long yCoordinate;
+    private double yCoordinate;
     @Column(name = "description")
-    private TextArea description;
+    private String description;
     @Column(name = "elevation")
     private int elevation;
     @Column(name = "aspect")
@@ -26,7 +26,7 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Post(long xCoordinate, long yCoordinate, TextArea description, int elevation, Aspect aspect, int temperature, User user) {
+    public Post(double xCoordinate, double yCoordinate, String description, int elevation, Aspect aspect, int temperature, User user) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.description = description;
@@ -36,19 +36,19 @@ public class Post {
         this.user = user;
     }
 
-    public long getxCoordinate() {
+    public double getxCoordinate() {
         return xCoordinate;
     }
 
-    public void setxCoordinate(long xCoordinate) {
+    public void setxCoordinate(double xCoordinate) {
         this.xCoordinate = xCoordinate;
     }
 
-    public long getyCoordinate() {
+    public double getyCoordinate() {
         return yCoordinate;
     }
 
-    public void setyCoordinate(long yCoordinate) {
+    public void setyCoordinate(double yCoordinate) {
         this.yCoordinate = yCoordinate;
     }
 
@@ -60,11 +60,11 @@ public class Post {
         this.id = id;
     }
 
-    public TextArea getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(TextArea description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
