@@ -36,6 +36,9 @@ public class Post {
         this.user = user;
     }
 
+    public Post() {
+    }
+
     public double getxCoordinate() {
         return xCoordinate;
     }

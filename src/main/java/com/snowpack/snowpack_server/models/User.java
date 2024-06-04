@@ -30,6 +30,9 @@ public class User {
         this.posts = new ArrayList<Post>();
     }
 
+    public User() {
+    }
+
     public String getUsername() {
         return username;
     }
