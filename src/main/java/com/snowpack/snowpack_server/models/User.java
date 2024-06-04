@@ -1,5 +1,6 @@
 package com.snowpack.snowpack_server.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class User {
     private String password;
     @Column(name = "email")
     private String email;
+    @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Post> posts;
     @Id
