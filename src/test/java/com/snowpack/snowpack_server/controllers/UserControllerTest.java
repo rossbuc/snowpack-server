@@ -1,9 +1,11 @@
 package com.snowpack.snowpack_server.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snowpack.snowpack_server.models.User;
 import com.snowpack.snowpack_server.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,7 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.hasSize;
@@ -33,6 +38,9 @@ class UserControllerTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     void shouldHaveUsers() throws Exception {
@@ -68,5 +76,21 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(0))) // Expecting JSON object with "id" equal to "1"
                 .andExpect(jsonPath("$.username", is("1"))) // Expecting JSON object with "name" equal to "User One"
                 .andExpect(jsonPath("$.email", is("user1@example.com"))); // Expecting JSON object with "email" equal to "user1@example.com"
+    }
+
+    @Test
+    void canAddUser() throws Exception {
+        User user = new User("username", "psssss", "somerandomemail@mail.com");
+
+        String userJson = objectMapper.writeValueAsString(user);
+
+        when(userRepository.save(any(User.class))).thenReturn(user);
+
+        mvc.perform(post("/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userJson))
+                .andExpect(status().isOk());
+
+        verify(userRepository).save(any(User.class));
     }
 }
