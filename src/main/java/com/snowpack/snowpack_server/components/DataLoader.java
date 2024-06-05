@@ -8,8 +8,10 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+
+//Comment out @Component to avoid running the DataLoader
 @Profile("!test")
-@Component
+//@Component
 public class DataLoader implements ApplicationRunner {
 
     @Autowired

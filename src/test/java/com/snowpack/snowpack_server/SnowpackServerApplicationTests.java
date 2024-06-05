@@ -10,8 +10,4 @@ class SnowpackServerApplicationTests {
 	void contextLoads() {
 	}
 
-	public static void main() {
-
-	}
-
 }
