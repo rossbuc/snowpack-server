@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,7 +35,7 @@ class UserControllerTest {
     private UserRepository userRepository;
 
     @Test
-    void initialTest() throws Exception {
+    void shouldHaveUsers() throws Exception {
 
         List<User> users = Arrays.asList(
                 new User("1", "User One", "user1@example.com"),
@@ -51,5 +52,21 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[0].username", is("1")))
                 .andExpect(jsonPath("$[1].username", is("2")))
                 .andExpect(jsonPath("$[2].username", is("3")));
+    }
+
+    @Test
+    void getUserById() throws Exception {
+        User user = new User("1", "User One", "user1@example.com");
+
+        // Mocking repository to return Optional.of(user) when findById is called with "1"
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        // Performing GET request to /users/1
+        mvc.perform(MockMvcRequestBuilders.get("/users/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()) // Expecting HTTP 200 OK
+                .andExpect(jsonPath("$.id", is(0))) // Expecting JSON object with "id" equal to "1"
+                .andExpect(jsonPath("$.username", is("1"))) // Expecting JSON object with "name" equal to "User One"
+                .andExpect(jsonPath("$.email", is("user1@example.com"))); // Expecting JSON object with "email" equal to "user1@example.com"
     }
 }
