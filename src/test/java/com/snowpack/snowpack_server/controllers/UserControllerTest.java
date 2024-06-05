@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.hasSize;
@@ -92,5 +93,27 @@ class UserControllerTest {
                 .andExpect(status().isOk());
 
         verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    void canUpdateUser() throws Exception {
+        User existingUser = new User("1", "John Doe", "john.doe@example.com");
+        User updatedUser = new User("updated name", "Updated Name", "updated.email@example.com");
+
+        // Convert updatedUser object to JSON
+        String updatedUserJson = objectMapper.writeValueAsString(updatedUser);
+
+        // Mock repository findById and save methods
+        when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(any(User.class))).thenReturn(updatedUser);
+
+        // Perform PUT request to /users/1 with updatedUserJson as request body
+        mvc.perform(put("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedUserJson))
+                .andExpect(status().isOk()) // Expecting HTTP 200 OK
+                .andExpect(jsonPath("$.id", is(0))) // Expecting JSON object with "id" equal to "1"
+                .andExpect(jsonPath("$.username", is("updated name"))) // Expecting JSON object with "name" equal to "Updated Name"
+                .andExpect(jsonPath("$.email", is("updated.email@example.com"))); // Expecting JSON object with "email" equal to "updated.email@example.com"
     }
 }
