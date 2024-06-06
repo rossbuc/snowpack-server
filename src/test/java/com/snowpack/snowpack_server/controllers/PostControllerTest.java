@@ -20,6 +20,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,6 +64,29 @@ class PostControllerTest {
                 .andExpect(jsonPath("$[0].temperature", is(4)))
                 .andExpect(jsonPath("$[0].user.username", is("username")))
                 .andExpect(jsonPath("$[0].user.email", is("user@gmail.com")));
+    }
+
+    @Test
+    public void shouldGetPostById() throws Exception {
+        User user = new User("username", "passst", "user@gmail.com");
+
+        Post post = new Post(34.45, 56.902, "some desccription blaablaaablaaa", 3490, Aspect.NE, 4, user);
+
+
+        when(postRepository.findById(1L)).thenReturn(Optional.of(post));
+
+        mvc.perform(MockMvcRequestBuilders.get("/posts/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.xCoordinate", is(34.45)))
+                .andExpect(jsonPath("$.yCoordinate", is(56.902)))
+                .andExpect(jsonPath("$.description", is("some desccription blaablaaablaaa")))
+                .andExpect(jsonPath("$.elevation", is(3490)))
+                .andExpect(jsonPath("$.aspect", is("NE")))
+                .andExpect(jsonPath("$.temperature", is(4)))
+                .andExpect(jsonPath("$.user.username", is("username")))
+                .andExpect(jsonPath("$.user.email", is("user@gmail.com")));
+
     }
 
 }
