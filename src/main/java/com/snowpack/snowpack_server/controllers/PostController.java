@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class PostController {
@@ -23,7 +24,7 @@ public class PostController {
     }
 
     @GetMapping(value = "/posts/{id}")
-    public ResponseEntity<Post> getPostByID(@PathVariable Long id) {
-        return new ResponseEntity<Post>(postRepository.getReferenceById(id), HttpStatus.OK);
+    public ResponseEntity<Optional<Post>> getPostByID(@PathVariable Long id) {
+        return new ResponseEntity<Optional<Post>>(postRepository.findById(id), HttpStatus.OK);
     }
 }
