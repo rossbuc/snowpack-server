@@ -1,5 +1,6 @@
 package com.snowpack.snowpack_server.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snowpack.snowpack_server.models.Aspect;
 import com.snowpack.snowpack_server.models.Post;
 import com.snowpack.snowpack_server.models.User;
@@ -24,7 +25,10 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,6 +42,9 @@ class PostControllerTest {
 
     @MockBean
     PostRepository postRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     public void shouldHavePosts() throws Exception {
@@ -87,6 +94,25 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.user.username", is("username")))
                 .andExpect(jsonPath("$.user.email", is("user@gmail.com")));
 
+    }
+
+    @Test
+    public void shouldCreatePost() throws Exception {
+
+        User user = new User("username", "psssss", "somerandomemail@mail.com");
+
+        Post post = new Post(34.45, 56.902, "some desccription blaablaaablaaa", 3490, Aspect.NE, 4, user);
+
+        String postJson = objectMapper.writeValueAsString(post);
+
+        when(postRepository.save(any(Post.class))).thenReturn(post);
+
+        mvc.perform(post("/posts/new")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(postJson))
+                .andExpect(status().isOk());
+
+        verify(postRepository).save(any(Post.class));
     }
 
 }
