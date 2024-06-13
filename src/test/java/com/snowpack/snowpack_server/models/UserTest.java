@@ -10,11 +10,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserTest {
 
     User user;
+    User follower;
     Post post;
 
     @BeforeEach
     void setup() {
         user = new User("mockuser", "mockuserPSSword", "mock@user.com");
+        follower = new User("follower", "mockuserPSSword", "follower@user.com");
         post = new Post(45.567, 108.34555, "some ski stuff shoowsh swoosh", 5679, Aspect.E, -1, user);
     }
 
@@ -67,5 +69,27 @@ class UserTest {
     @Test
     void getId() {
         assertNotNull(user.getId());
+    }
+
+    @Test
+    void hasFollowers() {
+        assertNotNull(user.getFollowers());
+    }
+
+    @Test
+    void canAddFollower() {
+        user.getFollowers().add(follower);
+        assertEquals(1, user.getFollowers().size());
+    }
+
+    @Test
+    void hasFollowing() {
+        assertNotNull(user.getFollowing());
+    }
+
+    @Test
+    void canFollow() {
+        user.getFollowing().add(follower);
+        assertEquals(1, user.getFollowing().size());
     }
 }
