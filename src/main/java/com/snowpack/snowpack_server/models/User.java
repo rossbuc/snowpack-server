@@ -19,6 +19,17 @@ public class User {
     @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Post> posts;
+    @JsonIgnoreProperties("followers")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_followers",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id")
+    )
+    private List<User> followers;
+    @JsonIgnoreProperties("following")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followers")
+    private List<User> following;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -27,7 +38,9 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.posts = new ArrayList<Post>();
+        this.posts = new ArrayList<>();
+        this.followers = new ArrayList<>();
+        this.following = new ArrayList<>();
     }
 
     public User() {
@@ -67,6 +80,22 @@ public class User {
 
     public long getId() {
         return id;
+    }
+
+    public List<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<User> followers) {
+        this.followers = followers;
+    }
+
+    public List<User> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<User> following) {
+        this.following = following;
     }
 
     public void setId(long id) {
