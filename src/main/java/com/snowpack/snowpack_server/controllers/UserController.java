@@ -39,6 +39,8 @@ public class UserController {
             user.setUsername((newUser.getUsername()));
             user.setPassword(newUser.getPassword());
             user.setPosts(newUser.getPosts());
+            user.setFollowers(newUser.getFollowers());
+            user.setFollowing(newUser.getFollowing());
             return userRepository.save(user);
         }).orElseGet(() -> {
             System.out.println("User not found ");

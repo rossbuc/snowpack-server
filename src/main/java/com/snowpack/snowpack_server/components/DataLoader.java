@@ -13,8 +13,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+//Comment out @Component to avoid running the data loader each time
 @Profile("!test")
-@Component
+//@Component
 public class DataLoader implements ApplicationRunner {
 
     @Autowired
@@ -26,7 +27,7 @@ public class DataLoader implements ApplicationRunner {
     public DataLoader() {
     }
 
-    public void run(ApplicationArguments arga) {
+    public void run(ApplicationArguments args) {
         // Create mock users
         User user1 = new User("rossbuc", "123456", "rossbuchan@duttycoding.sick");
         User user2 = new User("hamishrendick", "23456h", "hamish@hdog.net");
