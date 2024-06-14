@@ -10,6 +10,9 @@ import java.util.List;
 @Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Column(name = "username")
     private String username;
     @Column(name = "password")
@@ -30,9 +33,7 @@ public class User {
     @JsonIgnoreProperties("user")
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followers")
     private List<User> following;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+
 
     public User(String username, String password, String email) {
         this.username = username;
