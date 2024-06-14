@@ -19,7 +19,7 @@ public class User {
     @JsonIgnoreProperties("user")
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Post> posts;
-    @JsonIgnoreProperties("followers")
+    @JsonIgnoreProperties("user")
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_followers",
@@ -27,7 +27,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "follower_id")
     )
     private List<User> followers;
-    @JsonIgnoreProperties("following")
+    @JsonIgnoreProperties("user")
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "followers")
     private List<User> following;
     @Id
