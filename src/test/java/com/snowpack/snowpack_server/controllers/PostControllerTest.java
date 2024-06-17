@@ -16,15 +16,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.swing.*;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,9 +48,9 @@ class PostControllerTest {
         User user = new User("username", "passst", "user@gmail.com");
 
         List<Post> posts = Arrays.asList(
-                new Post(34.45, 56.902, "some desccription blaablaaablaaa", 3490, Aspect.NE, 4, user),
-                new Post(394.6, 1.9, "some desccription blaablaaablaaa", 340, Aspect.E, 14, user),
-                new Post(-4.456, 53.1, "some desccription blaablaaablaaa", 9490, Aspect.N, -40, user)
+                new Post(34.45, 56.902, "title", "some desccription blaablaaablaaa", 3490, Aspect.NE, 4, user),
+                new Post(394.6, 1.9, "title", "some desccription blaablaaablaaa", 340, Aspect.E, 14, user),
+                new Post(-4.456, 53.1, "title", "some desccription blaablaaablaaa", 9490, Aspect.N, -40, user)
         );
 
         when(postRepository.findAll()).thenReturn(posts);
@@ -77,7 +73,7 @@ class PostControllerTest {
     public void shouldGetPostById() throws Exception {
         User user = new User("username", "passst", "user@gmail.com");
 
-        Post post = new Post(34.45, 56.902, "some desccription blaablaaablaaa", 3490, Aspect.NE, 4, user);
+        Post post = new Post(34.45, 56.902, "title", "some desccription blaablaaablaaa", 3490, Aspect.NE, 4, user);
 
 
         when(postRepository.findById(1L)).thenReturn(Optional.of(post));
@@ -101,7 +97,7 @@ class PostControllerTest {
 
         User user = new User("username", "psssss", "somerandomemail@mail.com");
 
-        Post post = new Post(34.45, 56.902, "some desccription blaablaaablaaa", 3490, Aspect.NE, 4, user);
+        Post post = new Post(34.45, 56.902, "title", "some desccription blaablaaablaaa", 3490, Aspect.NE, 4, user);
 
         String postJson = objectMapper.writeValueAsString(post);
 

@@ -2,8 +2,6 @@ package com.snowpack.snowpack_server.models;
 
 import jakarta.persistence.*;
 
-import java.awt.*;
-
 @Entity
 @Table(name = "posts")
 public class Post {
@@ -14,6 +12,8 @@ public class Post {
     private double xCoordinate;
     @Column(name = "location_yCoordinate")
     private double yCoordinate;
+    @Column(name = "title")
+    private String title;
     @Column(name = "description")
     private String description;
     @Column(name = "elevation")
@@ -26,9 +26,10 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Post(double xCoordinate, double yCoordinate, String description, int elevation, Aspect aspect, int temperature, User user) {
+    public Post(double xCoordinate, double yCoordinate, String title, String description, int elevation, Aspect aspect, int temperature, User user) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+        this.title = title;
         this.description = description;
         this.elevation = elevation;
         this.aspect = aspect;
@@ -101,5 +102,13 @@ public class Post {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

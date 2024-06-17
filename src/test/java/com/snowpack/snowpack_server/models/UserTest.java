@@ -17,7 +17,7 @@ class UserTest {
     void setup() {
         user = new User("mockuser", "mockuserPSSword", "mock@user.com");
         follower = new User("follower", "mockuserPSSword", "follower@user.com");
-        post = new Post(45.567, 108.34555, "some ski stuff shoowsh swoosh", 5679, Aspect.E, -1, user);
+        post = new Post(45.567, 108.34555, "title", "some ski stuff shoowsh swoosh", 5679, Aspect.E, -1, user);
     }
 
     @Test

@@ -1,10 +1,7 @@
 package com.snowpack.snowpack_server.models;
 
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +13,7 @@ class PostTest {
     @BeforeEach
     public void setUp() {
         user = new User("mockuser", "mockuserPSSword", "mock@user.com");
-        post = new Post(45.567, 108.34555, "some ski stuff shoowsh swoosh", 5679, Aspect.E, -1, user);
+        post = new Post(45.567, 108.34555, "title", "some ski stuff shoowsh swoosh", 5679, Aspect.E, -1, user);
     }
     
 
@@ -94,5 +91,16 @@ class PostTest {
     @Test
     void getUser() {
         assertEquals(user, post.getUser());
+    }
+
+    @Test
+    void hasTitle() {
+        assertEquals("title", post.getTitle());
+    }
+
+    @Test
+    void canSetTitle() {
+        post.setTitle("new title");
+        assertEquals("new title", post.getTitle());
     }
 }
