@@ -2,6 +2,11 @@ package com.snowpack.snowpack_server.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
+
 @Entity
 @Table(name = "posts")
 public class Post {
@@ -12,7 +17,8 @@ public class Post {
     private double xCoordinate;
     @Column(name = "location_yCoordinate")
     private double yCoordinate;
-    @Column(name = "title")
+    @Column(name = "date-time")
+    private LocalDateTime dateTime;
     private String title;
     @Column(name = "description")
     private String description;
@@ -26,9 +32,10 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Post(double xCoordinate, double yCoordinate, String title, String description, int elevation, Aspect aspect, int temperature, User user) {
+    public Post(double xCoordinate, double yCoordinate, LocalDateTime dateTime, String title, String description, int elevation, Aspect aspect, int temperature, User user) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+        this.dateTime = dateTime;
         this.title = title;
         this.description = description;
         this.elevation = elevation;
@@ -110,5 +117,13 @@ public class Post {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 }

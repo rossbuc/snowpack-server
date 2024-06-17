@@ -3,6 +3,7 @@ package com.snowpack.snowpack_server.models;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,7 +18,7 @@ class UserTest {
     void setup() {
         user = new User("mockuser", "mockuserPSSword", "mock@user.com");
         follower = new User("follower", "mockuserPSSword", "follower@user.com");
-        post = new Post(45.567, 108.34555, "title", "some ski stuff shoowsh swoosh", 5679, Aspect.E, -1, user);
+        post = new Post(45.567, 108.34555, LocalDateTime.now(), "title", "some ski stuff shoowsh swoosh", 5679, Aspect.E, -1, user);
     }
 
     @Test

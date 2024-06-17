@@ -11,11 +11,12 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Random;
 
 //Comment out @Component to avoid running the data loader each time
 @Profile("!test")
-//@Component
+@Component
 public class DataLoader implements ApplicationRunner {
 
     @Autowired
@@ -67,7 +68,7 @@ public class DataLoader implements ApplicationRunner {
             int dangerLevel = random.nextInt(5);
             User user = userRepository.findAll().get(random.nextInt((int) userRepository.count()));
 
-            Post post = new Post(latitude, longitude, "title", description, elevation, aspect, dangerLevel, user);
+            Post post = new Post(latitude, longitude, LocalDateTime.now(), "title", description, elevation, aspect, dangerLevel, user);
             postRepository.save(post);
         }
     }
