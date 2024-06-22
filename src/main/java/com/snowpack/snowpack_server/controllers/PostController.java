@@ -17,7 +17,10 @@ public class PostController {
     PostRepository postRepository;
 
     @GetMapping(value = "/posts")
-    public ResponseEntity<List<Post>> getPosts() {
+    public ResponseEntity<List<Post>> getPosts(@RequestParam(name="recent", required = false)String recent) {
+        if (recent != null) {
+            return new ResponseEntity<>(postRepository.findAllSortByDateTime(), HttpStatus.OK);
+        }
         return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
     }
 
