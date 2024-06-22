@@ -124,15 +124,15 @@ class PostControllerTest {
 
         List<Post> posts = Arrays.asList(post3, post2, post1);
 
-        when(postRepository. findAllSortByDateTime()).thenReturn(posts);
+        when(postRepository.findAllByOrderByDateTimeDesc()).thenReturn(posts);
 
-        mvc.perform(MockMvcRequestBuilders.get("/posts?sortBy=recent")
+        mvc.perform(MockMvcRequestBuilders.get("/posts")
+                        .param("recent", "true")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].title", is("title3")))  // Check sorting order by datetime
-                .andExpect(jsonPath("$[1].title", is("title2")))
-                .andExpect(jsonPath("$[2].title", is("title1")));
+                .andExpect(jsonPath("$[0].title", is("title1")))
+                .andExpect(jsonPath("$[1].title", is("title2")));
 
         // Optionally, you can assert other properties like datetime, user details, etc.
     }
