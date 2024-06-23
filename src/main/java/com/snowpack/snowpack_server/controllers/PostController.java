@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +22,11 @@ public class PostController {
     @GetMapping(value = "/posts")
     public ResponseEntity<List<Post>> getPosts(@RequestParam(name="recent", required = false)String recent) {
         if (recent != null) {
-            System.out.println(postRepository.findAllByOrderByDateTimeDesc());
-            return new ResponseEntity<>(postRepository.findAllByOrderByDateTimeDesc(), HttpStatus.OK);
+            System.out.println(postRepository.findAll());
+            List<Post> posts = postRepository.findAll();
+            sortByDateTimeDescending(posts);
+            System.out.println(posts);
+            return new ResponseEntity<>(posts, HttpStatus.OK);
         }
         return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
     }
@@ -34,5 +40,15 @@ public class PostController {
     public ResponseEntity<Post> createPost(@RequestBody Post post) {
         postRepository.save(post);
         return ResponseEntity.ok().body(post);
+    }
+
+    public static void sortByDateTimeDescending(List<Post> objects) {
+        objects.sort(new Comparator<Post>() {
+            @Override
+            public int compare(Post obj1, Post obj2) {
+                // Sorting in descending order
+                return obj2.getDateTime().compareTo(obj1.getDateTime());
+            }
+        });
     }
 }

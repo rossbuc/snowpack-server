@@ -124,7 +124,7 @@ class PostControllerTest {
 
         List<Post> posts = Arrays.asList(post3, post2, post1);
 
-        when(postRepository.findAllByOrderByDateTimeDesc()).thenReturn(posts);
+        when(postRepository.findAll()).thenReturn(posts);
 
         mvc.perform(MockMvcRequestBuilders.get("/posts")
                         .param("recent", "true")
