@@ -136,4 +136,38 @@ class PostControllerTest {
 
         // Optionally, you can assert other properties like datetime, user details, etc.
     }
+
+    @Test
+    void canFilterByElevation() throws Exception {
+        User user = new User("username", "psssss", "somerandomemail@mail.com");
+
+        Post post1 = new Post(34.45, 56.902, LocalDateTime.now(), "title1", "description1", 3490, Aspect.NE, 4, user);
+        Post post2 = new Post(394.6, 1.9, LocalDateTime.of(2023, 6, 20, 12, 1, 1), "title2", "description2", 340, Aspect.E, 14, user);
+        Post post3 = new Post(-4.456, 53.1, LocalDateTime.of(2022, 6, 20, 12, 1, 1), "title3", "description3", 9490, Aspect.N, -40, user);
+
+        // Test case with elevation >= 350
+        List<Post> postsAbove350 = Arrays.asList(post1, post3);
+        when(postRepository.findPostByElevationGreaterThanEqual(350)).thenReturn(postsAbove350);
+
+        mvc.perform(MockMvcRequestBuilders.get("/posts")
+                        .param("elevation", "350")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].title", is("title1")))
+                .andExpect(jsonPath("$[0].elevation", is(3490)))
+                .andExpect(jsonPath("$[1].title", is("title3")))
+                .andExpect(jsonPath("$[1].elevation", is(9490)));
+
+        // Test case with elevation >= 9500 (should return empty)
+        List<Post> noPostsAbove9500 = Arrays.asList();
+        when(postRepository.findPostByElevationGreaterThanEqual(9500)).thenReturn(noPostsAbove9500);
+
+        mvc.perform(MockMvcRequestBuilders.get("/posts")
+                        .param("elevation", "9500")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
 }

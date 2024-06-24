@@ -20,13 +20,20 @@ public class PostController {
     PostRepository postRepository;
 
     @GetMapping(value = "/posts")
-    public ResponseEntity<List<Post>> getPosts(@RequestParam(name="recent", required = false)String recent) {
+    public ResponseEntity<List<Post>> getPosts(
+            @RequestParam(name="recent", required = false) String recent,
+            @RequestParam(name="elevation", required = false) String elevation
+    ) {
         if (recent != null) {
             System.out.println(postRepository.findAll());
             List<Post> posts = postRepository.findAll();
             sortByDateTimeDescending(posts);
             System.out.println(posts);
             return new ResponseEntity<>(posts, HttpStatus.OK);
+        }
+        if (elevation != null) {
+            int elevationInt = Integer.parseInt(elevation);
+            return new ResponseEntity<>(postRepository.findPostByElevationGreaterThanEqual(elevationInt), HttpStatus.OK);
         }
         return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
     }
