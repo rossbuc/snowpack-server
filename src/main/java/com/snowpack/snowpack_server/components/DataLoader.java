@@ -16,7 +16,7 @@ import java.util.Random;
 
 //Comment out @Component to avoid running the data loader each time
 @Profile("!test")
-//@Component
+@Component
 public class DataLoader implements ApplicationRunner {
 
     @Autowired
@@ -67,8 +67,9 @@ public class DataLoader implements ApplicationRunner {
             Aspect aspect = aspects[random.nextInt(aspects.length)];
             int dangerLevel = random.nextInt(5);
             User user = userRepository.findAll().get(random.nextInt((int) userRepository.count()));
+            LocalDateTime dateTime = LocalDateTime.of(2000 + i, 9, 25, 1, 1);
 
-            Post post = new Post(latitude, longitude, LocalDateTime.now(), "title", description, elevation, aspect, dangerLevel, user);
+            Post post = new Post(latitude, longitude, dateTime, "title", description, elevation, aspect, dangerLevel, user);
             postRepository.save(post);
         }
     }

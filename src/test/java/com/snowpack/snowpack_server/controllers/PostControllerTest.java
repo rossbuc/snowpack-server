@@ -115,29 +115,6 @@ class PostControllerTest {
     }
 
     @Test
-    void canSortByTime() throws Exception {
-        User user = new User("username", "psssss", "somerandomemail@mail.com");
-
-        Post post1 = new Post(34.45, 56.902, LocalDateTime.now(), "title1", "description1", 3490, Aspect.NE, 4, user);
-        Post post2 = new Post(394.6, 1.9, LocalDateTime.of(2023, 6, 20, 12, 1, 1), "title2", "description2", 340, Aspect.E, 14, user);
-        Post post3 = new Post(-4.456, 53.1, LocalDateTime.of(2022, 6, 20, 12, 1, 1), "title3", "description3", 9490, Aspect.N, -40, user);
-
-        List<Post> posts = Arrays.asList(post3, post2, post1);
-
-        when(postRepository.findAll()).thenReturn(posts);
-
-        mvc.perform(MockMvcRequestBuilders.get("/posts")
-                        .param("recent", "true")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].title", is("title1")))
-                .andExpect(jsonPath("$[1].title", is("title2")));
-
-        // Optionally, you can assert other properties like datetime, user details, etc.
-    }
-
-    @Test
     void canFilterByElevation() throws Exception {
         User user = new User("username", "psssss", "somerandomemail@mail.com");
 

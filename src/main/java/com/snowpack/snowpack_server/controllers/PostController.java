@@ -26,10 +26,10 @@ public class PostController {
     ) {
         if (recent != null) {
             System.out.println(postRepository.findAll());
-            List<Post> posts = postRepository.findAll();
-            sortByDateTimeDescending(posts);
-            System.out.println(posts);
-            return new ResponseEntity<>(posts, HttpStatus.OK);
+//            List<Post> posts = postRepository.findAll();
+//            sortByDateTimeDescending(posts);
+//            System.out.println(posts);
+            return new ResponseEntity<>(postRepository.findAllByOrderByDateTimeDesc(), HttpStatus.OK);
         }
         if (elevation != null) {
             int elevationInt = Integer.parseInt(elevation);
