@@ -61,10 +61,17 @@ class PostRepositoryTest {
     void testGetPostByAspect() {
         List<Post> posts = postRepository.findPostByAspect(Aspect.NE);
 
-        System.out.println(posts);
-
         assertThat(posts).hasSize(1);
         assertThat(posts).extracting("title").containsExactly("title1");
         assertThat(posts).extracting("aspect").containsExactly(Aspect.NE);
+    }
+
+    @Test
+    void testGetPostByTemperature() {
+        List<Post> posts = postRepository.findPostByTemperatureGreaterThanEqual(10);
+
+        assertThat(posts).hasSize(1);
+        assertThat(posts).extracting("title").containsExactly("title2");
+        assertThat(posts).extracting("temperature").containsExactly(14);
     }
 }

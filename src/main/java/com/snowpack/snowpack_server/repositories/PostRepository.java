@@ -15,4 +15,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findPostByElevationGreaterThanEqual(int elevation);
 
     List<Post> findPostByAspect(Aspect aspect);
+
+    List<Post> findPostByTemperatureGreaterThanEqual(int temperature);
 }
