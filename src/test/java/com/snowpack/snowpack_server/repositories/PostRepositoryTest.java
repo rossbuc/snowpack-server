@@ -32,7 +32,7 @@ class PostRepositoryTest {
         Post post3 = new Post(-4.456, 53.1, LocalDateTime.of(2022, 6, 20, 12, 1, 1), "title3", "description3", 9490, Aspect.N, -40, user);
 
         userRepository.save(user);
-        postRepository.saveAll(List.of(post1, post2, post3));
+        postRepository.saveAll(List.of(post3, post2, post1));
 
         List<Post> posts = postRepository.findPostByElevationGreaterThanEqual(350);
 
@@ -55,5 +55,16 @@ class PostRepositoryTest {
 
         assertThat(posts).hasSize(3);
         assertThat(posts).extracting("title").containsExactly("title1", "title2", "title3");
+    }
+
+    @Test
+    void testGetPostByAspect() {
+        List<Post> posts = postRepository.findPostByAspect(Aspect.NE);
+
+        System.out.println(posts);
+
+        assertThat(posts).hasSize(1);
+        assertThat(posts).extracting("title").containsExactly("title1");
+        assertThat(posts).extracting("aspect").containsExactly(Aspect.NE);
     }
 }
