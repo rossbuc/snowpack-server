@@ -22,12 +22,13 @@ public class PostController {
 
     @GetMapping(value = "/posts")
     public ResponseEntity<List<Post>> getPosts(
-            @RequestParam(name="recent", required = false) String recent,
+            @RequestParam(name="sortBy", required = false) String sortBy,
             @RequestParam(name="elevation", required = false) String elevation,
             @RequestParam(name="aspect", required = false) String aspect,
             @RequestParam(name="temperature", required = false) String temperature
     ) {
-        if (recent != null) {
+        if (sortBy != null) {
+//            for now we just need to sort by time but when we need to sort by location we will need another if in here
             System.out.println(postRepository.findAll());
 //            List<Post> posts = postRepository.findAll();
 //            sortByDateTimeDescending(posts);
