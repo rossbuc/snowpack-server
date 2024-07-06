@@ -24,7 +24,8 @@ public class PostController {
     public ResponseEntity<List<Post>> getPosts(
             @RequestParam(name="recent", required = false) String recent,
             @RequestParam(name="elevation", required = false) String elevation,
-            @RequestParam(name="aspect", required = false) String aspect
+            @RequestParam(name="aspect", required = false) String aspect,
+            @RequestParam(name="temperature", required = false) String temperature
     ) {
         if (recent != null) {
             System.out.println(postRepository.findAll());
@@ -40,6 +41,10 @@ public class PostController {
         if (aspect != null) {
             Aspect parsedAspect = Aspect.valueOf(aspect);
             return new ResponseEntity<>(postRepository.findPostByAspect(parsedAspect), HttpStatus.OK);
+        }
+        if (temperature != null) {
+            int temperatureInt = Integer.parseInt(temperature);
+            return new ResponseEntity<>(postRepository.findPostByTemperatureGreaterThanEqual(temperatureInt), HttpStatus.OK);
         }
         return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
     }

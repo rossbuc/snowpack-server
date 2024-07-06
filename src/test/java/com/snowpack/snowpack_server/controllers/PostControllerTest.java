@@ -178,4 +178,36 @@ class PostControllerTest {
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
+    @Test
+    void canFilterByTemperature() throws Exception {
+        User user = new User("username", "psssss", "somerandomemail@mail.com");
+
+        Post post1 = new Post(34.45, 56.902, LocalDateTime.now(), "title1", "description1", 3490, Aspect.NE, 4, user);
+        Post post2 = new Post(394.6, 1.9, LocalDateTime.of(2023, 6, 20, 12, 1, 1), "title2", "description2", 340, Aspect.E, 14, user);
+        Post post3 = new Post(-4.456, 53.1, LocalDateTime.of(2022, 6, 20, 12, 1, 1), "title3", "description3", 9490, Aspect.N, -40, user);
+
+        // Test case with elevation >= 350
+        List<Post> postsAbove0 = Arrays.asList(post1, post2);
+        when(postRepository.findPostByTemperatureGreaterThanEqual(0)).thenReturn(postsAbove0);
+
+        mvc.perform(MockMvcRequestBuilders.get("/posts")
+                        .param("temperature", "0")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].title", is("title1")))
+                .andExpect(jsonPath("$[0].temperature", is(4)))
+                .andExpect(jsonPath("$[1].title", is("title2")))
+                .andExpect(jsonPath("$[1].temperature", is(14)));
+
+        // Test case with elevation >= 9500 (should return empty)
+        List<Post> noPostsAbove95 = List.of();
+        when(postRepository.findPostByElevationGreaterThanEqual(95)).thenReturn(noPostsAbove95);
+
+        mvc.perform(MockMvcRequestBuilders.get("/posts")
+                        .param("temperature", "95")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
 }
