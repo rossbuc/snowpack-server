@@ -1,5 +1,6 @@
 package com.snowpack.snowpack_server.controllers;
 
+import com.snowpack.snowpack_server.models.Aspect;
 import com.snowpack.snowpack_server.models.Post;
 import com.snowpack.snowpack_server.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,8 @@ public class PostController {
     @GetMapping(value = "/posts")
     public ResponseEntity<List<Post>> getPosts(
             @RequestParam(name="recent", required = false) String recent,
-            @RequestParam(name="elevation", required = false) String elevation
+            @RequestParam(name="elevation", required = false) String elevation,
+            @RequestParam(name="aspect", required = false) String aspect
     ) {
         if (recent != null) {
             System.out.println(postRepository.findAll());
@@ -34,6 +36,10 @@ public class PostController {
         if (elevation != null) {
             int elevationInt = Integer.parseInt(elevation);
             return new ResponseEntity<>(postRepository.findPostByElevationGreaterThanEqual(elevationInt), HttpStatus.OK);
+        }
+        if (aspect != null) {
+            Aspect parsedAspect = Aspect.valueOf(aspect);
+            return new ResponseEntity<>(postRepository.findPostByAspect(parsedAspect), HttpStatus.OK);
         }
         return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
     }

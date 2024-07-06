@@ -147,4 +147,35 @@ class PostControllerTest {
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
+    @Test
+    void canFilterByAspect() throws Exception {
+        User user = new User("username", "psssss", "somerandomemail@mail.com");
+
+        Post post1 = new Post(34.45, 56.902, LocalDateTime.now(), "title1", "description1", 3490, Aspect.NE, 4, user);
+        Post post2 = new Post(394.6, 1.9, LocalDateTime.of(2023, 6, 20, 12, 1, 1), "title2", "description2", 340, Aspect.E, 14, user);
+        Post post3 = new Post(-4.456, 53.1, LocalDateTime.of(2022, 6, 20, 12, 1, 1), "title3", "description3", 9490, Aspect.N, -40, user);
+
+        // Test case with elevation >= 350
+        List<Post> postsAbove350 = List.of(post2);
+        when(postRepository.findPostByAspect(Aspect.E)).thenReturn(postsAbove350);
+
+        mvc.perform(MockMvcRequestBuilders.get("/posts")
+                        .param("aspect", "E")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].title", is("title2")))
+                .andExpect(jsonPath("$[0].aspect", is(Aspect.E.name())));
+
+        // Test case with elevation >= 9500 (should return empty)
+        List<Post> noPostsFacingSouth = List.of();
+        when(postRepository.findPostByAspect(Aspect.S)).thenReturn(noPostsFacingSouth);
+
+        mvc.perform(MockMvcRequestBuilders.get("/posts")
+                        .param("aspect", "S")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
 }

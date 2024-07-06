@@ -16,7 +16,7 @@ import java.util.Random;
 
 //Comment out @Component to avoid running the data loader each time
 @Profile("!test")
-@Component
+//@Component
 public class DataLoader implements ApplicationRunner {
 
     @Autowired
