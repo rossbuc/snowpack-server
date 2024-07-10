@@ -28,17 +28,18 @@ public class PostController {
             @RequestParam(name="elevation", required = false) String elevation,
             @RequestParam(name="aspect", required = false) String aspect,
             @RequestParam(name="temperature", required = false) String temperature
-    ) {
-        try {
-            Integer elevationInt = elevation != null ? Integer.parseInt(elevation) : null;
-            Integer temperatureInt = temperature != null ? Integer.parseInt(temperature) : null;
-            Aspect parsedAspect = aspect != null ? Aspect.valueOf(aspect) : null;
+    ) throws NumberFormatException, IllegalArgumentException {
+        Integer elevationInt = elevation != null ? Integer.parseInt(elevation) : null;
+        Integer temperatureInt = temperature != null ? Integer.parseInt(temperature) : null;
+        Aspect parsedAspect = aspect != null ? Aspect.valueOf(aspect) : null;
 
-            Specification<Post> specification = Specification.where(PostSpecification.hasTemperatureGreaterThanEqual(temperatureInt))
-                    .and(PostSpecification.hasElevationGreaterThanEqual(elevationInt))
-                    .and(PostSpecification.hasAspect(parsedAspect))
-                    .and(PostSpecification.isSortedByDateTimeDesc(sortBy));
-        };
+        Specification<Post> specification = Specification.where(PostSpecification.hasTemperatureGreaterThanEqual(temperatureInt))
+                .and(PostSpecification.hasElevationGreaterThanEqual(elevationInt))
+                .and(PostSpecification.hasAspect(parsedAspect))
+                .and(PostSpecification.isSortedByDateTimeDesc(sortBy));
+
+        List<Post> posts = postRepository.findAll(specification);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
     @GetMapping(value = "/posts/{id}")
