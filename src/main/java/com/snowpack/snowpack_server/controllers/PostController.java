@@ -3,7 +3,9 @@ package com.snowpack.snowpack_server.controllers;
 import com.snowpack.snowpack_server.models.Aspect;
 import com.snowpack.snowpack_server.models.Post;
 import com.snowpack.snowpack_server.repositories.PostRepository;
+import com.snowpack.snowpack_server.specifications.PostSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,27 +29,16 @@ public class PostController {
             @RequestParam(name="aspect", required = false) String aspect,
             @RequestParam(name="temperature", required = false) String temperature
     ) {
-        if (sortBy != null) {
-//            for now we just need to sort by time but when we need to sort by location we will need another if in here
-            System.out.println(postRepository.findAll());
-//            List<Post> posts = postRepository.findAll();
-//            sortByDateTimeDescending(posts);
-//            System.out.println(posts);
-            return new ResponseEntity<>(postRepository.findAllByOrderByDateTimeDesc(), HttpStatus.OK);
-        }
-        if (elevation != null) {
-            int elevationInt = Integer.parseInt(elevation);
-            return new ResponseEntity<>(postRepository.findPostByElevationGreaterThanEqual(elevationInt), HttpStatus.OK);
-        }
-        if (aspect != null) {
-            Aspect parsedAspect = Aspect.valueOf(aspect);
-            return new ResponseEntity<>(postRepository.findPostByAspect(parsedAspect), HttpStatus.OK);
-        }
-        if (temperature != null) {
-            int temperatureInt = Integer.parseInt(temperature);
-            return new ResponseEntity<>(postRepository.findPostByTemperatureGreaterThanEqual(temperatureInt), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
+        try {
+            Integer elevationInt = elevation != null ? Integer.parseInt(elevation) : null;
+            Integer temperatureInt = temperature != null ? Integer.parseInt(temperature) : null;
+            Aspect parsedAspect = aspect != null ? Aspect.valueOf(aspect) : null;
+
+            Specification<Post> specification = Specification.where(PostSpecification.hasTemperatureGreaterThanEqual(temperatureInt))
+                    .and(PostSpecification.hasElevationGreaterThanEqual(elevationInt))
+                    .and(PostSpecification.hasAspect(parsedAspect))
+                    .and(PostSpecification.isSortedByDateTimeDesc(sortBy));
+        };
     }
 
     @GetMapping(value = "/posts/{id}")
