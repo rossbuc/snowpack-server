@@ -52,14 +52,4 @@ public class PostController {
         postRepository.save(post);
         return ResponseEntity.ok().body(post);
     }
-
-    public static void sortByDateTimeDescending(List<Post> objects) {
-        objects.sort(new Comparator<Post>() {
-            @Override
-            public int compare(Post obj1, Post obj2) {
-                // Sorting in descending order
-                return obj2.getDateTime().compareTo(obj1.getDateTime());
-            }
-        });
-    }
 }
