@@ -10,9 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,5 +48,20 @@ public class PostController {
     public ResponseEntity<Post> createPost(@RequestBody Post post) {
         postRepository.save(post);
         return ResponseEntity.ok().body(post);
+    }
+
+    @PutMapping(value="/posts/{id}/edit", produces="application/json")
+    public Optional<Post> editPost(@PathVariable Long id, @RequestBody Post updatedPost) {
+        return postRepository.findById(id).map(post -> {
+            post.setTitle(updatedPost.getTitle());
+            post.setElevation(updatedPost.getElevation());
+            post.setTemperature(updatedPost.getTemperature());
+            post.setDateTime(updatedPost.getDateTime());
+            post.setAspect(updatedPost.getAspect());
+            post.setyCoordinate(updatedPost.getyCoordinate());
+            post.setxCoordinate(updatedPost.getxCoordinate());
+            post.setDescription(updatedPost.getDescription());
+            return postRepository.save(post);
+        }, ResponseEntity.ok());
     }
 }
