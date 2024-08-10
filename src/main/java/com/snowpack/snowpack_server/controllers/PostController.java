@@ -51,7 +51,7 @@ public class PostController {
     }
 
     @PutMapping(value="/posts/{id}/edit", produces="application/json")
-    public Optional<Post> editPost(@PathVariable Long id, @RequestBody Post updatedPost) {
+    public ResponseEntity<Post> editPost(@PathVariable Long id, @RequestBody Post updatedPost) {
         return postRepository.findById(id).map(post -> {
             post.setTitle(updatedPost.getTitle());
             post.setElevation(updatedPost.getElevation());
@@ -61,7 +61,8 @@ public class PostController {
             post.setyCoordinate(updatedPost.getyCoordinate());
             post.setxCoordinate(updatedPost.getxCoordinate());
             post.setDescription(updatedPost.getDescription());
-            return postRepository.save(post);
-        }, ResponseEntity.ok());
+            postRepository.save(post);
+            return new ResponseEntity<>(post, HttpStatus.OK);
+        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

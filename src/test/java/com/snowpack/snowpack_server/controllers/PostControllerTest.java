@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -221,5 +222,41 @@ class PostControllerTest {
                 .andExpect(jsonPath("$[0].title", is("title1")))
                 .andExpect(jsonPath("$[1].title", is("title2")))
                 .andExpect(jsonPath("$[2].title", is("title3")));
+    }
+
+
+    @Test
+    public void shouldEditPost() throws Exception {
+        // Arrange
+        User user = new User("username", "psssss", "somerandomemail@mail.com");
+
+        Post existingPost = new Post(34.45, 56.902, LocalDateTime.now(), "Old Title", "Old description", 3490, Aspect.NE, 4, user);
+        Post updatedPost = new Post(34.45, 56.902, LocalDateTime.now(), "New Title", "New description", 5000, Aspect.SW, 10, user);
+
+        when(postRepository.findById(1L)).thenReturn(Optional.of(existingPost));
+        when(postRepository.save(any(Post.class))).thenReturn(updatedPost);
+
+        // Act
+        mvc.perform(MockMvcRequestBuilders.put("/posts/1/edit")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedPost)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title", is("New Title")))
+                .andExpect(jsonPath("$.description", is("New description")))
+                .andExpect(jsonPath("$.elevation", is(5000)))
+                .andExpect(jsonPath("$.aspect", is("SW")))
+                .andExpect(jsonPath("$.temperature", is(10)))
+                .andExpect(jsonPath("$.user.username", is("username")));
+
+        // Assert that the postRepository.save was called with the updated post
+        ArgumentCaptor<Post> postCaptor = ArgumentCaptor.forClass(Post.class);
+        verify(postRepository).save(postCaptor.capture());
+
+        Post savedPost = postCaptor.getValue();
+        assertThat(savedPost.getTitle()).isEqualTo("New Title");
+        assertThat(savedPost.getDescription()).isEqualTo("New description");
+        assertThat(savedPost.getElevation()).isEqualTo(5000);
+        assertThat(savedPost.getAspect()).isEqualTo(Aspect.SW);
+        assertThat(savedPost.getTemperature()).isEqualTo(10);
     }
 }
