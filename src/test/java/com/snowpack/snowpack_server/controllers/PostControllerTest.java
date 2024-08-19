@@ -259,4 +259,23 @@ class PostControllerTest {
         assertThat(savedPost.getAspect()).isEqualTo(Aspect.SW);
         assertThat(savedPost.getTemperature()).isEqualTo(10);
     }
+
+    @Test
+    public void shouldDeletePostById() throws Exception {
+        // Arrange
+        User user = new User("username", "passst", "user@gmail.com");
+        Post post = new Post(34.45, 56.902, LocalDateTime.now(), "title", "some description", 3490, Aspect.NE, 4, user);
+
+        // Mock the repository to return the post when findById is called
+        when(postRepository.findById(1L)).thenReturn(Optional.of(post));
+
+        // Act: Perform the DELETE request
+        mvc.perform(MockMvcRequestBuilders.delete("/posts/1")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());  // Expect a 200 OK status for successful deletion
+
+        // Assert: Verify that the deleteById method was called with the correct ID
+        verify(postRepository).deleteById(1L);
+    }
+
 }

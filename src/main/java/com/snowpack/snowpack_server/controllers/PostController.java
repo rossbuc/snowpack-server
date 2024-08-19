@@ -66,7 +66,7 @@ public class PostController {
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("posts/{id}}")
+    @DeleteMapping("posts/{id}")
     public ResponseEntity<Post> deletePost(@PathVariable Long id) {
         try {
             postRepository.deleteById(id);
