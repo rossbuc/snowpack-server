@@ -65,4 +65,14 @@ public class PostController {
             return new ResponseEntity<>(post, HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+    @DeleteMapping("posts/{id}}")
+    public ResponseEntity<Post> deletePost(@PathVariable Long id) {
+        try {
+            postRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception err) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
